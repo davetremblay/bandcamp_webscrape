@@ -4,11 +4,11 @@ def bandcampscrape(url, comp):
         bandcamp. Also asks if the album includes various artists (y/n).
         
     Returns a csv file that includes the artist name, the album name, the day, 
-        month, and year of the release, the city and country of the artist. All
-        in a line for each track including the previous information as well as
-        track number, title, part (empty), part name (empty), length, minutes
-        (empty), seconds (empty), and the artist of the track in the case of a
-        compilation.
+        month, and year of the release, the city, country, and musical genre of
+        the artist. All in a line for each track including the previous 
+        information as well as track number, title, part (empty), part name 
+        (empty), length, minutes (empty), seconds (empty), and the artist of 
+        the track in the case of a compilation.
         
     Notes:
         1. Since csv files are comma-delimited, all commas in text strings have 
@@ -24,7 +24,7 @@ def bandcampscrape(url, comp):
     
     f = open(filename, "w", encoding="utf-8")
     
-    headers = ("artist, album, day, month, year, city, country, track, title, part, name, length, min, sec, track_artist\n")
+    headers = ("artist, album, day, month, year, city, country, disc, track, title, part, name, length, min, sec, track_artist\n")
     
     f.write(headers)
     
@@ -44,7 +44,22 @@ def bandcampscrape(url, comp):
     
     day = reldate[1]
     
-    month = reldate[0]
+    months = {
+            "January":1,
+            "February":2,
+            "March":3,
+            "April":4,
+            "May":5,
+            "June":6,
+            "July":7,
+            "August":8,
+            "September":9,
+            "October":10,
+            "November":11,
+            "December":12
+            }
+    
+    month = str(months[reldate[0]])
     
     year = reldate[2]
         
@@ -68,7 +83,7 @@ def bandcampscrape(url, comp):
         city = ""
         
         country = ""
-    
+            
     songlist = soup.find(class_="track_list track_table").find_all(itemprop="tracks")
             
     forlist = []
@@ -100,7 +115,7 @@ def bandcampscrape(url, comp):
     
         forlist.append(songtup)
         
-        f.write(artist.replace(",","|")+","+album.replace(",","|")+","+day+","+month+","+year+","+city+","+country+","+songno+","+trtit.replace(",","|")+","+""+","+""+","+songlen+","+""+","+""+","+""+trart.replace(",","|")+"\n")
+        f.write(artist.replace(",","|")+","+album.replace(",","|")+","+day+","+month+","+year+","+city+","+country+","+"1"+","+songno+","+trtit.replace(",","|")+","+""+","+""+","+songlen+","+""+","+""+","+""+trart.replace(",","|")+"\n")
         
     f.close()
     
@@ -108,4 +123,4 @@ def bandcampscrape(url, comp):
 
 url = input("Enter url: ")
 comp = input("Is it a multi-artist release? (y/n): ")
-bandcampscrape(url)
+bandcampscrape(url, comp)
