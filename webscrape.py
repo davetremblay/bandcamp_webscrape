@@ -84,10 +84,20 @@ def bandcampscrape(url, comp):
         
         country = ""
             
+    if country == "":
+    
+        tags = soup.find(class_="tralbumData tralbum-tags tralbum-tags-nu hidden").find_all(class_="tag")
+    
+        country = tags[len(tags)-1].text
+        
+    else:
+        
+        country = country
+    
     songlist = soup.find(class_="track_list track_table").find_all(itemprop="tracks")
             
     forlist = []
-    
+            
     for song in songlist:
     
         songno = song.find(class_="track_number secondaryText").text
@@ -108,15 +118,25 @@ def bandcampscrape(url, comp):
             trtit = songtit
                         
             trart = ""
-                
-        songlen = song.find(class_="time secondaryText").text.strip()
         
+        try:
+        
+            songlen = song.find(class_="time secondaryText").text.strip()
+            
+        except AttributeError:
+            
+            songlen = ""
+                
         songtup = (artist,album,released,city,country,songno,songtit,songlen)
     
         forlist.append(songtup)
         
         f.write(artist.replace(",","|")+","+album.replace(",","|")+","+day+","+month+","+year+","+city+","+country+","+"1"+","+songno+","+trtit.replace(",","|")+","+""+","+""+","+songlen+","+""+","+""+","+""+trart.replace(",","|")+"\n")
-        
+                
+    f.write(artist.replace(",","|")+","+album.replace(",","|")+","+day+","+month+","+year+","+city+","+country+","+""+","+""+","+""+","+""+","+""+","+""+","+""+","+""+","+""+""+"\n")
+    
+    f.write(artist.replace(",","|")+","+album.replace(",","|")+","+day+","+month+","+year+","+city+","+country+","+"1"+","+""+","+""+","+""+","+""+","+""+","+""+","+""+","+""+""+"\n")
+    
     f.close()
     
     return f
