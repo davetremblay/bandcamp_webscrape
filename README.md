@@ -39,6 +39,6 @@ I also left some space for non-standardized information, which can be added manu
 
 --seconds (which I use to transform 00:00 time format to total amount of seconds)
 
-There are also two more rows than necessary being printed, they don't contain track information. I use the first one to summarize all the track lengths on excel, and the second one I cut to another sheet.
-
 --minutes (which I use to transform total amount of seconds to decimal minutes format)
+
+There are also two more rows than necessary being printed, they don't contain track information. I use the first one to summarize all the track lengths on excel, and the second one I cut to another sheet.
