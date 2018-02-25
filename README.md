@@ -42,3 +42,5 @@ I also left some space for non-standardized information, which can be added manu
 --minutes (which I use to transform total amount of seconds to decimal minutes format)
 
 There are also two more rows than necessary being printed, they don't contain track information. I use the first one to summarize all the track lengths on excel, and the second one I cut to another sheet.
+
+This code does not work for single track pages. It is meant for bandcamp album pages.
