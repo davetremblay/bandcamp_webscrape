@@ -1,32 +1,35 @@
+import requests
+from bs4 import BeautifulSoup
+
 def bandcampscrape(url, comp):
     """
-    Input: url with http:// or https:// included from bandcamp or based on 
-        bandcamp. Also asks if the album includes various artists (y/n).
+    Input: url with http:// or https:// included from bandcamp or based
+    on bandcamp. Also asks if the album includes various artists (y/n).
         
-    Returns a csv file that includes the artist name, the album name, the day, 
-        month, and year of the release, the city, country, and musical genre of
-        the artist. All in a line for each track including the previous 
-        information as well as track number, title, part (empty), part name 
-        (empty), length, minutes (empty), seconds (empty), and the artist of 
-        the track in the case of a compilation.
+    Returns a csv file that includes the artist name, the album name, 
+    the day, month, and year of the release, the city, country, and 
+    musical genre of the artist. All in a line for each track including
+    the previous information as well as track number, title, 
+    part (empty), part name (empty), length, minutes (empty), 
+    seconds (empty), and the artist of the track in the case of a 
+    compilation.
         
     Notes:
-        1. Since csv files are comma-delimited, all commas in text strings have 
-            been replaced with "|".
-        2. If the artist name has a " - " string inside it, it will be exported
-            erroneously since " - " marks the split between artist and track
-            title in bandcamp's formatting.
+        1. Since csv files are comma-delimited, all commas in text 
+        strings have been replaced with "|".
+        2. If the artist name has a " - " string inside it, it will be
+        exported erroneously since " - " marks the split between artist 
+        and track title in bandcamp's formatting.
     """
-    import requests
-    from bs4 import BeautifulSoup
             
     filename = "album_info.csv"
     
     f = open(filename, "w", encoding="utf-8")
     
-    headers = ("artist, album, day, month, year, city, country, disc, track, title, part, name, length, min, sec, track_artist\n")
+    HEADERS = ("artist,album,day,month,year,city,country,disc,track,title,\
+    part,name,length,min,sec,track_artist\n")
     
-    f.write(headers)
+    f.write(HEADERS)
     
     r = requests.get(url)
     
@@ -36,7 +39,8 @@ def bandcampscrape(url, comp):
     
     album = soup.find(class_="trackTitle",itemprop="name").text.strip()
             
-    reltemp = soup.find(class_="tralbumData tralbum-credits").text.strip().split("\n")[0]
+    reltemp = (soup.find(class_="tralbumData tralbum-credits").
+               text.strip().split("\n")[0])
     
     released = reltemp[9:len(reltemp)].replace(",","")
         
@@ -86,7 +90,8 @@ def bandcampscrape(url, comp):
             
     if country == "":
     
-        tags = soup.find(class_="tralbumData tralbum-tags tralbum-tags-nu hidden").find_all(class_="tag")
+        tags = (soup.find(class_="tralbumData tralbum-tags tralbum-tags-nu hidden").
+                find_all(class_="tag"))
     
         country = tags[len(tags)-1].text
         
@@ -94,7 +99,8 @@ def bandcampscrape(url, comp):
         
         country = country
     
-    songlist = soup.find(class_="track_list track_table").find_all(itemprop="tracks")
+    songlist = (soup.find(class_="track_list track_table").
+                find_all(itemprop="tracks"))
             
     forlist = []
             
@@ -131,11 +137,62 @@ def bandcampscrape(url, comp):
     
         forlist.append(songtup)
         
-        f.write(artist.replace(",","|")+","+album.replace(",","|")+","+day+","+month+","+year+","+city+","+country+","+"1"+","+songno+","+trtit.replace(",","|")+","+""+","+""+","+songlen+","+""+","+""+","+""+trart.replace(",","|")+"\n")
+        f.write(artist.replace(",","|") + "," +
+                album.replace(",","|") + "," +
+                day + "," +
+                month + "," +
+                year + "," +
+                city + "," +
+                country + "," +
+                "1" + "," +
+                songno + "," +
+                trtit.replace(",","|") + "," + 
+                "" + "," + 
+                "" + "," +
+                songlen + "," + 
+                "" + "," + 
+                "" + "," + 
+                "" +
+                trarbt.replace(",","|") +
+                "\n")
                 
-    f.write(artist.replace(",","|")+","+album.replace(",","|")+","+day+","+month+","+year+","+city+","+country+","+""+","+""+","+""+","+""+","+""+","+""+","+""+","+""+","+""+""+"\n")
+    f.write(artist.replace(",","|") + "," +
+            album.replace(",","|") + "," +
+            day + "," +
+            month + "," +
+            year + "," +
+            city + "," +
+            country + "," +
+            "" + "," +
+            "" + "," +
+            "" + "," +
+            "" + "," +
+            "" + "," +
+            "" + "," +
+            "" + "," +
+            "" + "," +
+            "" +
+            "" +
+            "\n")
     
-    f.write(artist.replace(",","|")+","+album.replace(",","|")+","+day+","+month+","+year+","+city+","+country+","+"1"+","+""+","+""+","+""+","+""+","+""+","+""+","+""+","+""+""+"\n")
+    f.write(artist.replace(",","|") + "," +
+            album.replace(",","|") + "," +
+            day + "," +
+            month + "," +
+            year + "," +
+            city + "," +
+            country + "," +
+            "1" + "," +
+            "" + "," +
+            "" + "," +
+            "" + "," +
+            "" + "," +
+            "" + "," +
+            "" + "," +
+            "" + "," +
+            ""+
+            ""+
+            "\n")
     
     f.close()
     
